@@ -1,3 +1,6 @@
+# Que no coja los modulos a descargar
+node_modules
+
 # Windows image file caches
 Thumbs.db
 ehthumbs.db

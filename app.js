@@ -5,8 +5,11 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
+// YO: LAS RUTAS (FÍSICAS)
+// =============================================
+// .... ruta de acceso a la página de entrada
 var routes = require('./routes/index');
-var users = require('./routes/users');
+// =============================================
 
 var app = express();
 
@@ -15,16 +18,25 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
 // uncomment after placing your favicon in /public
-//app.use(favicon(__dirname + '/public/favicon.ico'));
+app.use(favicon(__dirname + '/public/favicon.ico'));
+
+
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', routes);
-app.use('/users', users);
 
+
+// YO: EL APP.USE ... DE LAS RUTAS
+// =============================================
+app.use('/', routes);		// YO: ASOCIA EL /routes/index CON LA RUTA /
+// =============================================
+
+
+// YO: RUTAS INDEFINIDAS (por ejemplo: localhost:3000/xxx
+// =========================================================
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
     var err = new Error('Not Found');
@@ -34,6 +46,8 @@ app.use(function(req, res, next) {
 
 // error handlers
 
+// YO: SI SE ESTA EN "MODO DESARROLLO" APARECE EL STACK DEL ERROR POR PANTALLA
+// =============================================================================
 // development error handler
 // will print stacktrace
 if (app.get('env') === 'development') {
