@@ -24,5 +24,9 @@ router.get('/quizes/question', quizController.question);
 // YO: RUTA /quizes/answer	--> se llama al Controller: quiz_controller.answer
 router.get('/quizes/answer', quizController.answer);
 
+// YO: RUTA /author --> invoca directamente a la View: views/author.ejs
+router.get('/author', function(req, res){
+	res.render('author');
+});
 
 module.exports = router;
