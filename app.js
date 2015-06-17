@@ -1,13 +1,18 @@
-var express = require('express');
+﻿var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
-// YO: LAS RUTAS (F�SICAS)
+// YO: MÓDULO EXPRESS-PARTIALS (es un middleware, que soporta vistas parciales)
+// .... para introducir un marco (layout.ejs) comun a todas las vistas
+// ===============================================================================
+var partials = require('express-partials');
+
+// YO: LAS RUTAS (FISICAS)
 // =============================================
-// .... ruta de acceso a la p�gina de entrada
+// .... ruta de acceso a la página de entrada
 var routes = require('./routes/index');
 // =============================================
 
@@ -16,6 +21,10 @@ var app = express();
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
+
+// YO: Usar el módulo express-partials:
+// ===============================================
+app.use(partials());
 
 // uncomment after placing your favicon in /public
 app.use(favicon(__dirname + '/public/favicon.ico'));
