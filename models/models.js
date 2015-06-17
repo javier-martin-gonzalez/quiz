@@ -40,16 +40,19 @@ exports.Quiz = Quiz;	// exportar la definición de tabla Quiz
 
 // sequelize.sync() --> crea e inicializa tabla de preguntas en DB
 //	CREA AUTOMÁTICAMENTE EL FICHERO quiz.sqlite !!!! (en caso de que la BD no exista)
-sequelize.sync().success(function(){
-	// success(...) ejecuta el manejador una vez creada la tabla
-	Quiz.count().success(function(count){
+sequelize.sync().then(function(){
+	// then(...) ejecuta el manejador una vez creada la tabla
+	Quiz.count().then(function(count){
 		if (count === 0){	// la tabla se inicializa solo si está vacía
 		
 			// Quiz.create ... crea la primera pregunta y la guarda en la tabla
 			Quiz.create({ 	pregunta: 'Capital de Italia',
 							respuesta: 'Roma'
-						})
-			.success(function(){console.log('Base de datos inicializada')});
+						});
+			Quiz.create({ 	pregunta: 'Capital de Portugal',
+							respuesta: 'Lisboa'
+						})			
+			.then(function(){console.log('Base de datos inicializada')});
 		};
 	});
 });
