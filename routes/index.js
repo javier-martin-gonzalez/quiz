@@ -8,7 +8,8 @@ var router = express.Router();
 // =====================================
 var quizController = require('../controllers/quiz_controller');
 
-/* GET home page. */
+// PAGINA DE ENTRADA (home page)
+// ===========================================
 router.get('/', function(req, res) {
 	// YO: con res.render --> se invoca a la VIEW (views/index.ejs)
 	// 	res.render --> se generan y envian al cliente la Vista EJS
@@ -18,6 +19,24 @@ router.get('/', function(req, res) {
   res.render('index', { title: 'Quiz' });
 });
 
+// AUTOLOAD de comandos con :quizId
+//		quizController.load() se instala para que se ejecute antes
+//			que lo necesiten las rutas show y answer, y solo en el
+//			caso de que path contenga :quizId!!!!
+//		Se instala con el método param de express ...
+//			para que solo se invoque si existe el parametro :quizId
+//			en algún lugar de la cabecera HTTP (en query, body o param)
+// ==================================================================
+router.param('quizId', quizController.load); // autoload :quizId
+
+
+// YO: AHORA, DEFINICIÓN DE RUTAS DE /quizes
+// ============================================
+router.get('/quizes', 						quizController.index);
+router.get('/quizes/:quizId(\\d+)', 		quizController.show);
+router.get('/quizes/:quizId(\\d+)/answer', 	quizController.answer);
+
+
 // YO: RUTA /quizes/question	--> se llama al Controller: quizController.question
 //router.get('/quizes/question', quizController.question);
 
@@ -25,10 +44,6 @@ router.get('/', function(req, res) {
 //router.get('/quizes/answer', quizController.answer);
 
 
-// YO: AHORA, DEFINICIÓN DE RUTAS DE /quizes
-router.get('/quizes', 						quizController.index);
-router.get('/quizes/:quizId(\\d+)', 		quizController.show);
-router.get('/quizes/:quizId(\\d+)/answer', 	quizController.answer);
 
 
 // YO: RUTA /author --> invoca directamente a la View: views/author.ejs
