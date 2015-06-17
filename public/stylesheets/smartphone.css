@@ -17,3 +17,7 @@ body{
 footer, input{
 	font-size: large;
 }
+
+footer a{
+	margin: 5px;
+}

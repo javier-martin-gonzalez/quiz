@@ -26,3 +26,7 @@ footer{
 	clear: both;
 	display: block;
 }
+
+footer a{
+	margin: 5px;
+}
