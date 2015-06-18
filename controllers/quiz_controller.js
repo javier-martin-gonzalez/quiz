@@ -159,5 +159,61 @@ exports.create = function(req, res){
 		
 };
 
+// GET /quizes/:id/edit
+exports.edit = function(req, res){
+	var quiz = req.quiz; // autoload de instancia de quiz
+	
+	res.render('quizes/edit', {quiz: quiz, errors: []});
+};
+	
+	
+// PUT /quizes/:id
 
+exports.update = function(req, res){
+	req.quiz.pregunta = req.body.quiz.pregunta;
+	req.quiz.respuesta = req.body.quiz.respuesta;
+		
+	var errors = req.quiz.validate(); // porque el objeto errors no tiene "then"
+	if (errors){
+		var i=0;
+		var errores = new Array(); // se convierte en [] con la propiedad 
+						// message por compatibilidad con el layout
+		for (var prop in errors) errores[i++]={message: errors[prop]};
+		res.render('quizes/edit', {quiz: req.quiz, errors: errores});
+	}else{
+	// save: guarda campos pregunta y respuesta en DB
+		req.quiz.save({fields: ["pregunta", "respuesta"]}).then(function(){
+			res.redirect('/quizes');
+		});
+	}
+};
+	
+// NO FUNCIONA CON LA VERSIÓN ACTUAL: EL OBJETO ERRORS NO TIENE "THEN"
+/*
+exports.update = function(req, res){
+	req.quiz.pregunta = req.body.quiz.pregunta;
+	req.quiz.respuesta = req.body.quiz.respuesta;
+	
+	req.quiz.validate().then(function(err){
+		if (err){
+			res.render('quizes/edit', {quiz: req.quiz, errors: err.errors});
+		}else{
+			// save: guarda campos pregunta y respuesta en DB
+			req.quiz.save({fields: ["pregunta", "respuesta"]}).then(function(){
+				res.redirect('/quizes');
+			});
+		}
+	});
+}
+*/
+
+
+// DELETE /quizes/:id
+exports.destroy = function(req, res){
+	// El método destroy() ordena la destruccion de la entrada de la tabla
+	// identificada por req.quiz
+	req.quiz.destroy().then(function(){
+		res.redirect('/quizes');
+	}).catch(function(error){next(error)});
+};
 

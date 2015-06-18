@@ -10,6 +10,9 @@ var bodyParser = require('body-parser');
 // ===============================================================================
 var partials = require('express-partials');
 
+var methodOverride = require('method-override');
+
+
 // YO: LAS RUTAS (FISICAS)
 // =============================================
 // .... ruta de acceso a la página de entrada
@@ -35,6 +38,11 @@ app.use(bodyParser.json());
 //app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.urlencoded());
 app.use(cookieParser());
+
+// YO: SE INSTALA EL MW method-override.
+//		El parámetro '_method' indica el nombre utilizado para encapsular el método!!!
+app.use(methodOverride('_method'));
+
 app.use(express.static(path.join(__dirname, 'public')));
 
 

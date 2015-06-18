@@ -38,6 +38,11 @@ router.get('/quizes/:quizId(\\d+)/answer', 	quizController.answer);
 // Para dar de alta nuevas preguntas:
 router.get('/quizes/new',					quizController.new);
 router.post('/quizes/create',				quizController.create);
+// Para editar - modificar preguntas:
+router.get('/quizes/:quizId(\\d+)/edit',	quizController.edit);
+router.put('/quizes/:quizId(\\d+)',			quizController.update);
+// Para borrar preguntas:
+router.delete('/quizes/:quizId(\\d+)',		quizController.destroy);
 
 
 // YO: RUTA /quizes/question	--> se llama al Controller: quizController.question
