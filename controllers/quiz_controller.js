@@ -19,12 +19,28 @@ exports.load = function(req, res, next, quizId){
 
 // GET /quizes
 exports.index = function(req,res){
-	models.Quiz.findAll().then(function(quizes){
-		res.render('quizes/index', {quizes: quizes});
-	});
+	if (req.query.search !== undefined){
+		
+		// En el filtroBusqueda:
+		//		+ Se ha concatenado al principio y al final el caracter '%' para el like
+		//		+ Se han reemplazado los espacios en blanco de la cadena de búsquedas por el carácter '%'
+		//				--> expresión regular:	\s	: para espacios en blanco
+		//				-->						\s+	: puede ser más de un espacio en blanco
+		//				-->						/g	: reemplazar todos!!
+				
+		var filtroBusqueda = "%" + req.query.search.replace(/\s+/g,'%') + "%";
+		models.Quiz.findAll({where: ["pregunta like ?", filtroBusqueda], order: 'pregunta'}).then(function(quizes){
+			res.render('quizes/index', {quizes: quizes});
+		});
+	}else{
+		// No existe el parámetro "search": mostrar todas las preguntas (quizes) ... añadido el order (para que aparezcan también ordenadas)
+		models.Quiz.findAll({order: 'pregunta'}).then(function(quizes){
+			res.render('quizes/index', {quizes: quizes});
+		});
+	}
 };
 
-
+	//if ((req.query.respuestaUsuario.toUpperCase() === "CRISTOBAL COLON")
 
 // GET /quizes/:id
 exports.show = function(req, res){
