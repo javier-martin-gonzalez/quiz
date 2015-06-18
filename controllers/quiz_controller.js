@@ -30,12 +30,12 @@ exports.index = function(req,res){
 				
 		var filtroBusqueda = "%" + req.query.search.replace(/\s+/g,'%') + "%";
 		models.Quiz.findAll({where: ["pregunta like ?", filtroBusqueda], order: 'pregunta'}).then(function(quizes){
-			res.render('quizes/index', {quizes: quizes});
+			res.render('quizes/index', {quizes: quizes, errors: []});
 		});
 	}else{
 		// No existe el parámetro "search": mostrar todas las preguntas (quizes) ... añadido el order (para que aparezcan también ordenadas)
 		models.Quiz.findAll({order: 'pregunta'}).then(function(quizes){
-			res.render('quizes/index', {quizes: quizes});
+			res.render('quizes/index', {quizes: quizes, errors: []});
 		});
 	}
 };
@@ -48,7 +48,7 @@ exports.show = function(req, res){
 	// AHORA ESTÁ FACTORIZADO POR EL exports.load !!!!
 	// .... que busca previamente si existe el quizId
 	// .... en caso contrario ya redirige hacia error
-	res.render('quizes/show', {quiz: req.quiz});
+	res.render('quizes/show', {quiz: req.quiz, errors: []});
 	
 	// models.Quiz.findAll()	o 	find()
 	//		---> se buscan datos en la tabla Quiz
@@ -75,7 +75,7 @@ exports.answer = function(req, res){
 	if (req.query.respuesta === req.quiz.respuesta){
 		resultado = 'Correcto';
 	}
-	res.render('quizes/answer', {quiz: req.quiz, respuesta: resultado});
+	res.render('quizes/answer', {quiz: req.quiz, respuesta: resultado, errors: []});
 	
 	/*models.Quiz.find(req.params.quizId).then(function(quiz){
 		if (req.query.respuesta === quiz.respuesta){
@@ -106,7 +106,7 @@ exports.new = function(req, res){
 	var quiz = models.Quiz.build(	// crea objeto quiz
 		{pregunta: "Pregunta", respuesta: "Respuesta"}
 	);
-	res.render('quizes/new', {quiz: quiz});
+	res.render('quizes/new', {quiz: quiz, errors: []});
 };
 
 // POST /quizes/create
@@ -114,13 +114,49 @@ exports.create = function(req, res){
 	// Se crea un objeto quiz a partir de los datos que vienen de la peticion (en el body):
 	var quiz = models.Quiz.build(req.body.quiz);
 	
-	// Guarda en la BD los campos pregunta y respuesta de quiz:
-	//	(almacena el objeto no persistente quiz -solo las propiedades "pregunta" y "respuesta")
-	quiz.save({fields: ["pregunta", "respuesta"]}).then(function(){
-		res.redirect('/quizes');
-	})	// Redireccion HTTP (URL relativo) al Listado de Preguntas
-		// La primitiva HTTP POST /quizes/create no tiene vista asociada
-		//		+ Al terminar --> se realiza una redirección
+	//console.log("Crear pregunta: " + req.body.quiz.pregunta + " y su respuesta es " + req.body.quiz.respuesta);
+	
+	
+			
+	// Se valida (en funcion de lo que marque el modelo):
+	// ======================================================================
+	// OJO IMPORTANTE: las versiones actuales NO SOPORTAN: ..validate().then
+	//		... como indica el curso (hay que modificarlo)
+	// ======================================================================
+	var errors = quiz.validate(); // porque el objeto errors no tiene then
+	if (errors){
+		var i=0;
+		var errores = new Array(); // se convierte en [] con la propiedad 
+						// message por compatibilidad con el layout
+		for (var prop in errors) errores[i++]={message: errors[prop]};
+		res.render('quizes/new', {quiz: quiz, errors: errores});
+	}else{
+		quiz.save({fields: ["pregunta", "respuesta"]}).then(function(){
+				res.redirect('/quizes');
+		});
+	}
+	
+	// NO FUNCIONA CON LA VERSIÓN ACTUAL:
+	// ======================================
+	/*quiz.validate().then(function(err){
+		if (err) {
+			//console.log("++++ Detectado error de validacion");
+			res.render('quizes/new', {quiz: quiz, errors: err.errors});
+		}else{
+			//console.log("+++ NO Detectado error de validacion");
+			// Guarda en la BD los campos pregunta y respuesta de quiz:
+			//	(almacena el objeto no persistente quiz -solo las propiedades "pregunta" y "respuesta")
+			quiz.save({fields: ["pregunta", "respuesta"]}).then(function(){
+				res.redirect('/quizes');
+			})
+				// Redireccion HTTP (URL relativo) al Listado de Preguntas
+				// La primitiva HTTP POST /quizes/create no tiene vista asociada
+				//		+ Al terminar --> se realiza una redirección
+		}
+	});
+	*/
+	
+		
 };
 
 

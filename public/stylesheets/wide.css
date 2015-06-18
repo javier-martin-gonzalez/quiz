@@ -30,3 +30,8 @@ footer{
 footer a{
 	margin: 5px;
 }
+
+#ErrorMsgs{
+	color: #f61;
+	font-size: smaller;
+}

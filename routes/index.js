@@ -16,7 +16,7 @@ router.get('/', function(req, res) {
 	//		y se le pasa como parámetro "title" con el valor Express
 	// =============================================================
 	// YO: esta ruta genera directamente la VIEW sin pasar por el CONTROLLER
-  res.render('index', { title: 'Quiz' });
+  res.render('index', { title: 'Quiz', errors: []});
 });
 
 // AUTOLOAD de comandos con :quizId
@@ -51,7 +51,7 @@ router.post('/quizes/create',				quizController.create);
 
 // YO: RUTA /author --> invoca directamente a la View: views/author.ejs
 router.get('/author', function(req, res){
-	res.render('author');
+	res.render('author', {errors: []});
 });
 
 module.exports = router;
