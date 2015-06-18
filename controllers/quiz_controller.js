@@ -87,7 +87,7 @@ exports.answer = function(req, res){
 
 
 	/*models.Quiz.findAll().success(function(quiz){
-		if (req.query.respuesta === quiz[0].respuesta){
+		if (req.query.respuesta === quiz[;0].respuesta){
 			res.render('quizes/answer', {respuesta: 'Correcto'});
 		}else{
 			res.render('quizes/answer', {respuesta: 'Incorrecto'});
@@ -100,3 +100,28 @@ exports.answer = function(req, res){
 		res.render('quizes/answer', {respuesta: 'Incorrecto'});
 	}*/
 };
+
+// GET /quizes/new
+exports.new = function(req, res){
+	var quiz = models.Quiz.build(	// crea objeto quiz
+		{pregunta: "Pregunta", respuesta: "Respuesta"}
+	);
+	res.render('quizes/new', {quiz: quiz});
+};
+
+// POST /quizes/create
+exports.create = function(req, res){
+	// Se crea un objeto quiz a partir de los datos que vienen de la peticion (en el body):
+	var quiz = models.Quiz.build(req.body.quiz);
+	
+	// Guarda en la BD los campos pregunta y respuesta de quiz:
+	//	(almacena el objeto no persistente quiz -solo las propiedades "pregunta" y "respuesta")
+	quiz.save({fields: ["pregunta", "respuesta"]}).then(function(){
+		res.redirect('/quizes');
+	})	// Redireccion HTTP (URL relativo) al Listado de Preguntas
+		// La primitiva HTTP POST /quizes/create no tiene vista asociada
+		//		+ Al terminar --> se realiza una redirección
+};
+
+
+
