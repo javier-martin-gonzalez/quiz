@@ -1,6 +1,9 @@
 # Que no coja los modulos a descargar
 node_modules
 
+# Que no coja la base de datos
+quiz.sqlite
+
 # Windows image file caches
 Thumbs.db
 ehthumbs.db
