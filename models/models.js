@@ -45,7 +45,7 @@ sequelize.sync().then(function(){
 	Quiz.count().then(function(count){
 		if (count === 0){	// la tabla se inicializa solo si está vacía
 		
-			// Quiz.create ... crea la primera pregunta y la guarda en la tabla
+			// Quiz.create ... añadiendo mas preguntas para probar el "order by" al buscar
 			Quiz.create({ 	pregunta: 'Capital de Italia',
 							respuesta: 'Roma'
 						});
