@@ -7,6 +7,16 @@
 			<input type="text" id="resp" name="quiz[respuesta]" value="<%=quiz.respuesta%>"/>
 		</p>
 		<p>
+			<label for="tema" class="rem">Tema:</label>
+			<select id="tema" name="quiz[tema]">
+				<option value="Otro" 		<%=(quiz.tema==="Otro")?"selected='selected'":""%>>			Otro</option>
+				<option value="Humanidades" <%=(quiz.tema==="Humanidades")?"selected='selected'":""%>>	Humanidades</option>
+				<option value="Ocio">	 	<%=(quiz.tema==="Ocio")?"selected='selected'":""%>			Ocio</option>	
+				<option value="Ciencia" 	<%=(quiz.tema==="Ciencia")?"selected='selected'":""%>>		Ciencia</option>
+				<option value="Tecnologia" 	<%=(quiz.tema==="Tecnologia")?"selected='selected'":""%>>	Tecnologia</option>
+			</select>
+		</p>
+		<p>
 			<a href="/quizes"><button type="button">Cancelar</button></a>
 			<input type="submit" value="Salvar"/>
 		</p>

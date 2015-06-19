@@ -72,7 +72,7 @@ exports.show = function(req, res){
 exports.answer = function(req, res){	
 	
 	var resultado = 'Incorrecto';
-	if (req.query.respuesta === req.quiz.respuesta){
+	if (req.query.respuesta.toUpperCase() === req.quiz.respuesta.toUpperCase()){
 		resultado = 'Correcto';
 	}
 	res.render('quizes/answer', {quiz: req.quiz, respuesta: resultado, errors: []});
@@ -104,7 +104,7 @@ exports.answer = function(req, res){
 // GET /quizes/new
 exports.new = function(req, res){
 	var quiz = models.Quiz.build(	// crea objeto quiz
-		{pregunta: "Pregunta", respuesta: "Respuesta"}
+		{pregunta: "Pregunta", respuesta: "Respuesta", tema: "otro"}
 	);
 	res.render('quizes/new', {quiz: quiz, errors: []});
 };
@@ -131,7 +131,7 @@ exports.create = function(req, res){
 		for (var prop in errors) errores[i++]={message: errors[prop]};
 		res.render('quizes/new', {quiz: quiz, errors: errores});
 	}else{
-		quiz.save({fields: ["pregunta", "respuesta"]}).then(function(){
+		quiz.save({fields: ["pregunta", "respuesta", "tema"]}).then(function(){
 				res.redirect('/quizes');
 		});
 	}
@@ -168,10 +168,10 @@ exports.edit = function(req, res){
 	
 	
 // PUT /quizes/:id
-
 exports.update = function(req, res){
 	req.quiz.pregunta = req.body.quiz.pregunta;
 	req.quiz.respuesta = req.body.quiz.respuesta;
+	req.quiz.tema = req.body.quiz.tema;
 		
 	var errors = req.quiz.validate(); // porque el objeto errors no tiene "then"
 	if (errors){
@@ -182,7 +182,7 @@ exports.update = function(req, res){
 		res.render('quizes/edit', {quiz: req.quiz, errors: errores});
 	}else{
 	// save: guarda campos pregunta y respuesta en DB
-		req.quiz.save({fields: ["pregunta", "respuesta"]}).then(function(){
+		req.quiz.save({fields: ["pregunta", "respuesta", "tema"]}).then(function(){
 			res.redirect('/quizes');
 		});
 	}

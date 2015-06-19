@@ -47,23 +47,25 @@ sequelize.sync().then(function(){
 		
 			// Quiz.create ... añadiendo mas preguntas para probar el "order by" al buscar
 			Quiz.create({ 	pregunta: 'Capital de Italia',
-							respuesta: 'Roma'
+							respuesta: 'Roma',
+							tema: 'Otro'
 						});
 			Quiz.create({ 	pregunta: 'Capital de Francia',
-							respuesta: 'Paris'
+							respuesta: 'Paris',
+							tema: 'Otro'
 						});					
-			Quiz.create({ 	pregunta: 'Capital de Belgica',
-							respuesta: 'Bruselas'
+			Quiz.create({ 	pregunta: 'Inventor de la Penicilina',
+							respuesta: 'Alexander Fleming',
+							tema: 'Ciencia'
 						});					
-			Quiz.create({ 	pregunta: 'Capital de Albania',
-							respuesta: 'Tirana'
+			Quiz.create({ 	pregunta: 'Inventor de la Radio',
+							respuesta: 'Guillermo Marconi',
+							tema: 'Ciencia'
 						});						
-			Quiz.create({ 	pregunta: 'Capital de Bielorrusia',
-							respuesta: 'Minsk'
-						});						
-			Quiz.create({ 	pregunta: 'Capital de Portugal',
-							respuesta: 'Lisboa'
-						})			
+			Quiz.create({ 	pregunta: 'Autor de la República',
+							respuesta: 'Platon',
+							tema: 'Humanidades'
+						})
 			.then(function(){console.log('Base de datos inicializada')});
 		};
 	});
