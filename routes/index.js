@@ -4,9 +4,11 @@
 var express = require('express');
 var router = express.Router();
 
-// YO: SE INCLUYE EL CONTROLADOR
+// YO: SE INCLUYEN LOS CONTROLADORES
 // =====================================
 var quizController = require('../controllers/quiz_controller');
+var commentController = require('../controllers/comment_controller');
+
 
 // PAGINA DE ENTRADA (home page)
 // ===========================================
@@ -43,6 +45,11 @@ router.get('/quizes/:quizId(\\d+)/edit',	quizController.edit);
 router.put('/quizes/:quizId(\\d+)',			quizController.update);
 // Para borrar preguntas:
 router.delete('/quizes/:quizId(\\d+)',		quizController.destroy);
+// Para los comentarios de las Quiz
+router.get('/comments',								commentController.index);
+router.get('/quizes/:quizId(\\d+)/comments/new',	commentController.new);
+router.post('/quizes/:quizId(\\d+)/comments',		commentController.create);
+
 
 
 // YO: RUTA /quizes/question	--> se llama al Controller: quizController.question

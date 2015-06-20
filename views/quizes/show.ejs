@@ -3,3 +3,12 @@
 		<input type="text" name="respuesta" value="" placeholder="respuesta"/>
 		<input type="submit" value="Enviar"/>
 	</form>
+	
+	<p><a href="/quizes/<%=quiz.id%>/comments/new"><button>Nuevo comentario</button></a></p>
+	<p><strong>Comentarios:</strong></p>
+	<ul>
+	<!-- Ojo: error en los apuntes !!! -->
+	<% for(index in quiz.comments){ %>
+		<li> <%=quiz.comments[index].texto%> </li>
+	<% } %>
+	</ul>

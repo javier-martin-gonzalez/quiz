@@ -5,7 +5,15 @@ var models = require('../models/models.js');
 // Autoload - factoriza el código si ruta incluye :quizId
 // ===========================================================
 exports.load = function(req, res, next, quizId){
-	models.Quiz.find(quizId).then(
+		// El parámetro .... where: {id: Number(quizId)}
+		//							... para buscar el quiz identificado por quizId
+		// El parámetro ... include: [{ model: models.Comment }]
+		//							... solicita cargar en la propiedad quiz.Comments,
+		//							los comentarios asociados a través de la relación 1 - N
+	models.Quiz.find({
+						where: {id: Number(quizId) },
+						include: [{ model: models.Comment }]
+					}).then(
 		function(quiz) {
 			if (quiz){
 				req.quiz = quiz;
