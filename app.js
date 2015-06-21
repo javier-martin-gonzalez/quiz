@@ -5,6 +5,8 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
+
+
 // YO: MÓDULO EXPRESS-PARTIALS (es un middleware, que soporta vistas parciales)
 // .... para introducir un marco (layout.ejs) comun a todas las vistas
 // ===============================================================================
@@ -12,6 +14,8 @@ var partials = require('express-partials');
 
 var methodOverride = require('method-override');
 
+// MIDDELWARE DE GESTIÓN DE SESIONES:
+var session = require('express-session');
 
 // YO: LAS RUTAS (FISICAS)
 // =============================================
@@ -37,14 +41,44 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 //app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.urlencoded());
-app.use(cookieParser());
 
+
+// YO: PARA UTILIZAR EL MIDDELWARE GESTIÓN DE SESIONES (express-session)
+app.use(cookieParser('Quiz 2015'));
+app.use(session());
+
+
+//app.use(session({secret:'keyboard cat', key:'sid', cookie:{secure:true}}));
+
+// ---------------------------------------------------------
 // YO: SE INSTALA EL MW method-override.
 //		El parámetro '_method' indica el nombre utilizado para encapsular el método!!!
 app.use(methodOverride('_method'));
 
 app.use(express.static(path.join(__dirname, 'public')));
 
+
+// ESTE MIDDLEWARE (asociado con las SESIONES) realiza dos funciones:
+//		-- copia la sesion que esta accesible en req.session en res.locals.session
+//				para que estén accesibles para las vistas
+//		-- guarda la ruta de cada solicitud HTTP en la variable session.redir
+//				para poder redireccionar a la vista anterior después de hacer login o logout
+// ========================================================================
+
+app.use(function(req, res, next){
+	// guardar path en session.redir para despues de login
+	if (!req.path.match(/\/login|\/logout/)){
+		//console.log('**** PATH ANTERIOR: ' + req.session.redir);
+		req.session.redir = req.path;
+		//console.log('**** PATH GUARDADO: ' + req.session.redir);
+	}
+	
+	// Hacer visible req.session en las vistas
+	res.locals.session = req.session;
+	next();
+});
+
+// ========================================================================
 
 
 // YO: EL APP.USE ... DE LAS RUTAS

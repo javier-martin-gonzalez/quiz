@@ -42,3 +42,7 @@ nav span {
 footer a{
 	margin: 5px;
 }
+
+.right{
+	float: right;
+}

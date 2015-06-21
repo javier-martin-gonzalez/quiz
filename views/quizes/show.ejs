@@ -5,10 +5,24 @@
 	</form>
 	
 	<p><a href="/quizes/<%=quiz.id%>/comments/new"><button>Nuevo comentario</button></a></p>
+	
+	<%
+		/* 
+			Solo muestra los comentarios publicados si el usuario NO esta autenticado
+			Si esta autenticado mostrara tambien los comentarios sin autorizar, con
+				el boton de publicar al lado
+		*/
+	%>
 	<p><strong>Comentarios:</strong></p>
 	<ul>
 	<!-- Ojo: error en los apuntes !!! -->
 	<% for(index in quiz.comments){ %>
-		<li> <%=quiz.comments[index].texto%> </li>
+		<% if (quiz.comments[index].publicado || session.user){ %>
+			<li> <%=quiz.comments[index].texto%> 
+			<% if (session.user && !quiz.comments[index].publicado){ %>
+				<a href="/quizes/<%=quiz.id%>/comments/<%=quiz.comments[index].id%>/publish"><button>Publicar</button></a>
+			<% } %>
+			</li>
+		<% } %>
 	<% } %>
 	</ul>

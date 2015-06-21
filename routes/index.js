@@ -8,7 +8,7 @@ var router = express.Router();
 // =====================================
 var quizController = require('../controllers/quiz_controller');
 var commentController = require('../controllers/comment_controller');
-
+var sessionController = require('../controllers/session_controller');
 
 // PAGINA DE ENTRADA (home page)
 // ===========================================
@@ -31,25 +31,43 @@ router.get('/', function(req, res) {
 // ==================================================================
 router.param('quizId', quizController.load); // autoload :quizId
 
+// OTRO AUTOLOAD para :commentId
+//		... se ejecuta en caso de que path contenga :commentId
+// ==================================================================
+router.param('commentId', commentController.load);
 
-// YO: AHORA, DEFINICIÓN DE RUTAS DE /quizes
+
+// YO: DEFINICIÓN DE RUTAS DE SESION
+// ============================================
+router.get('/login',	sessionController.new);		//formulario login
+router.post('/login',	sessionController.create);	// crear sesión
+router.get('/logout',	sessionController.destroy);	// destruir sesion
+
+// YO: DEFINICIÓN DE RUTAS DE /quizes
 // ============================================
 router.get('/quizes', 						quizController.index);
 router.get('/quizes/:quizId(\\d+)', 		quizController.show);
 router.get('/quizes/:quizId(\\d+)/answer', 	quizController.answer);
 // Para dar de alta nuevas preguntas:
-router.get('/quizes/new',					quizController.new);
-router.post('/quizes/create',				quizController.create);
+// ... una ruta puede invocarse con varios MWs en serie: MW1, MW2, ..
+// 			se ejecutan en serie, de forma que si MW1 no pasa control
+//			a MW2 con next() no llegará a ejecutarse
+router.get('/quizes/new',					sessionController.loginRequired, quizController.new);
+router.post('/quizes/create',				sessionController.loginRequired, quizController.create);
 // Para editar - modificar preguntas:
-router.get('/quizes/:quizId(\\d+)/edit',	quizController.edit);
-router.put('/quizes/:quizId(\\d+)',			quizController.update);
+router.get('/quizes/:quizId(\\d+)/edit',	sessionController.loginRequired, quizController.edit);
+router.put('/quizes/:quizId(\\d+)',			sessionController.loginRequired, quizController.update);
 // Para borrar preguntas:
-router.delete('/quizes/:quizId(\\d+)',		quizController.destroy);
-// Para los comentarios de las Quiz
+router.delete('/quizes/:quizId(\\d+)',		sessionController.loginRequired, quizController.destroy);
+
+// YO: DEFINICIÓN DE RUTAS DE COMENTARIOS
+// ============================================
 router.get('/comments',								commentController.index);
 router.get('/quizes/:quizId(\\d+)/comments/new',	commentController.new);
 router.post('/quizes/:quizId(\\d+)/comments',		commentController.create);
 
+// ... el comentario estará accesible cuando la accion publish se ejecute:
+router.get('/quizes/:quizId(\\d+)/comments/:commentId(\\d+)/publish', sessionController.loginRequired, commentController.publish);
 
 
 // YO: RUTA /quizes/question	--> se llama al Controller: quizController.question

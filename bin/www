@@ -2,8 +2,27 @@
 var debug = require('debug')('quiz');
 var app = require('../app');
 
+// El modulo fs permite leer ficheros asociados
+var fs = require("fs");
+// El modulo https, permite instalar HTTPS
+var https = require("https");
+
+var options = {
+	key: fs.readFileSync('certs/quiz-2015jmg-key.pem').toString(),
+	cert: fs.readFileSync('certs/quiz-2015jmg-cert.pem').toString()
+};
+
 app.set('port', process.env.PORT || 3000);
 
+// SERVIDOR HTTP (PUERTO 3000)
+//		http://localhost:3000
 var server = app.listen(app.get('port'), function() {
   debug('Express server listening on port ' + server.address().port);
+});
+
+// SERVIDOR HTTPS (PUERTO 8443:
+//		https://localhost:8443
+var serverSecure = https.createServer(options, app);
+serverSecure.listen(8443, function(){
+	debug('Express server listening on port: ' + server.address().port);
 });
