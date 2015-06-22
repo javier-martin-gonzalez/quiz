@@ -51,8 +51,8 @@ Quiz.hasMany(Comment);		// .. indica que una Quiz puede tener muchos Comments
 exports.Quiz = Quiz;	// exportar la definición de tabla Quiz
 exports.Comment = Comment;	// exportar la definición de tabla Comment
 
-
-
+// Exportar para Estadisticas
+exports.sequelize = sequelize;
 
 // sequelize.sync() --> crea e inicializa tabla de preguntas en DB
 //	CREA AUTOMÁTICAMENTE EL FICHERO quiz.sqlite !!!! (en caso de que la BD no exista)

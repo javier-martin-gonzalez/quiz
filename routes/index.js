@@ -9,6 +9,7 @@ var router = express.Router();
 var quizController = require('../controllers/quiz_controller');
 var commentController = require('../controllers/comment_controller');
 var sessionController = require('../controllers/session_controller');
+var statisticsController = require('../controllers/statistics_controller');
 
 // PAGINA DE ENTRADA (home page)
 // ===========================================
@@ -59,6 +60,9 @@ router.get('/quizes/:quizId(\\d+)/edit',	sessionController.loginRequired, quizCo
 router.put('/quizes/:quizId(\\d+)',			sessionController.loginRequired, quizController.update);
 // Para borrar preguntas:
 router.delete('/quizes/:quizId(\\d+)',		sessionController.loginRequired, quizController.destroy);
+
+// Ver Estadísticas
+router.get('/quizes/statistics',			statisticsController.index);
 
 // YO: DEFINICIÓN DE RUTAS DE COMENTARIOS
 // ============================================
