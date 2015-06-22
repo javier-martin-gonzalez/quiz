@@ -1,9 +1,6 @@
 ﻿	
-	<% if (session.user){ %>
-			<p><strong>Estadísticas (se contabilizan comentarios Publicados y NO Publicados):</strong></p>
-	<% }else{ %>
-			<p><strong>Estadísticas (solo se contabilizan los comentarios Publicados):</strong></p>
-	<% } %>	
+	<p><strong>Estadísticas:</strong></p>
+
 	<ul>
 		<li> Número de Preguntas: <%=estadisticas.numPreg%> </li>
 		<li> Número de Comentarios Totales: <%=estadisticas.numCom%> </li>

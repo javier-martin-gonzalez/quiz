@@ -12,9 +12,7 @@ exports.index = function(req,res){
 	var estadisticas = {numPreg: '', numCom: '', numMedioComXPreg: '', numPregSinCom: '', numPregConCom: ''}; 
 	
 
-	if (req.session.user){
-		// ESTADISTICAS TENIENDO EN CUENTA TODOS LOS COMENTARIOS (LOS QUE ESTAN PUBLICADOS Y LOS QUE NO ESTAN PUBLICADOS)
-		// ===============================================================================================================
+
 		// Obtener el numero de preguntas:
 		models.sequelize.query('select count(*) numPreg from "Quizzes"').then(function(consulta) {
 			estadisticas.numPreg = consulta[0].numPreg;
@@ -27,11 +25,11 @@ exports.index = function(req,res){
 				estadisticas.numMedioComXPreg = estadisticas.numCom / estadisticas.numPreg;
 				
 				// Obtener el numero de preguntas sin comentarios
-				models.sequelize.query('select count(*) numPregSinCom from "Quizzes" where "id" not in (select distinct "Q.id" from "Quizzes" Q  join "Comments" C on ("Q.id" = "C.QuizId"))').then(function(consulta) {
+				models.sequelize.query('select count(*) numPregSinCom from "Quizzes" where "id" not in (select distinct Q."id" from "Quizzes" Q  join "Comments" C on (Q."id" = C."QuizId"))').then(function(consulta) {
 					estadisticas.numPregSinCom = consulta[0].numPregSinCom;
 					
 					// Obtener el numero de preguntas con comentarios
-					models.sequelize.query('select count(*) numPregConCom from "Quizzes" where "id" in (select distinct "Q.id" from "Quizzes" Q join "Comments" C on ("Q.id" = "C.QuizId"))').then(function(consulta) {
+					models.sequelize.query('select count(*) numPregConCom from "Quizzes" where "id" in (select distinct Q."id" from "Quizzes" Q join "Comments" C on (Q."id" = C."QuizId"))').then(function(consulta) {
 						estadisticas.numPregConCom = consulta[0].numPregConCom;
 						
 						res.render('statistics/index', {estadisticas: estadisticas, errors: []});
@@ -39,32 +37,4 @@ exports.index = function(req,res){
 				});			
 			});	
 		});
-	}else{
-		// ESTADISTICAS TENIENDO EN CUENTA SOLO LOS COMENTARIOS PUBLICADOS !!!
-		// ===============================================================================================================
-		// Obtener el numero de preguntas:
-		models.sequelize.query('select count(*) numPreg from "Quizzes"').then(function(consulta) {
-			estadisticas.numPreg = consulta[0].numPreg;
-			
-			// Obtener el numero de comentarios totales (NO PUBLICADOS)
-			models.sequelize.query('select count(*) numCom from "Comments" where "publicado" = 1').then(function(consulta) {
-				estadisticas.numCom = consulta[0].numCom;
-				
-				// Obtener el numero medio de comentarios PUBICADOS por pregunta	
-				estadisticas.numMedioComXPreg = estadisticas.numCom / estadisticas.numPreg;
-				
-				// Obtener el numero de preguntas sin comentarios PUBLICADOS
-				models.sequelize.query('select count(*) numPregSinCom from "Quizzes" where "id" not in (select distinct "Q.id" from "Quizzes" Q  join "Comments" C on ("Q.id" = "C.QuizId") where "publicado" = 1)').then(function(consulta) {
-					estadisticas.numPregSinCom = consulta[0].numPregSinCom;
-					
-					// Obtener el numero de preguntas con comentarios PUBLICADOS
-					models.sequelize.query('select count(*) numPregConCom from "Quizzes" where "id" in (select distinct "Q.id" from "Quizzes" Q join "Comments" C on ("Q.id" = "C.QuizId") where "publicado" = 1)').then(function(consulta) {
-						estadisticas.numPregConCom = consulta[0].numPregConCom;
-						
-						res.render('statistics/index', {estadisticas: estadisticas, errors: []});
-					});	
-				});			
-			});	
-		});	
-	}
 };
