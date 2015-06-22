@@ -46,9 +46,41 @@ app.use(bodyParser.urlencoded());
 // YO: PARA UTILIZAR EL MIDDELWARE GESTIÓN DE SESIONES (express-session)
 app.use(cookieParser('Quiz 2015'));
 app.use(session());
-
-
 //app.use(session({secret:'keyboard cat', key:'sid', cookie:{secure:true}}));
+
+
+// MIDDLEWARE EJERCICIO DEL MODULO 9
+// ========================================================================
+app.use(function(req, res, next){
+	
+	// Si existe sesion:
+	if (req.session.user){
+		// Crear la variable de sesion horaUltOper en caso de que no exista
+		// En caso de que exista ... controlar si ha tardado mas de 2 tiempo desde la ultima conexion
+		//		... en este supuesto --> destruir la sesion
+		if (req.session.horaUltOper){			
+			// La función getTime() ... devuelve milisegundos
+			var horaActual = new Date().getTime();
+			var diferencia = horaActual - req.session.horaUltOper;
+			// ... ver si han transcurrido mas de 2 MINUTOS:
+			if (diferencia > (1000*60*2)){
+				// Destruir las variables de sesion:
+				delete req.session.user;
+				delete req.session.horaUltOper;
+			}else{
+				// Almacenar la nueva hora:
+				req.session.horaUltOper = horaActual;				
+			}
+		}else{
+			req.session.horaUltOper = new Date().getTime();
+		}		
+	}
+	next();
+
+});
+
+
+
 
 // ---------------------------------------------------------
 // YO: SE INSTALA EL MW method-override.
@@ -56,6 +88,10 @@ app.use(session());
 app.use(methodOverride('_method'));
 
 app.use(express.static(path.join(__dirname, 'public')));
+
+
+
+
 
 
 // ESTE MIDDLEWARE (asociado con las SESIONES) realiza dos funciones:
