@@ -10,6 +10,8 @@ exports.index = function(req,res){
 	
 	var statistics = {numPreg: '', numCom: '', numMedioComXPreg: '', numPregSinCom: '', numPregConCom: ''}; 
 	
+	
+	if (req.session.user){
 		// Obtener el numero de preguntas:
 		models.sequelize.query('select count(*) n from "Quizzes"').then(function(consulta) {
 			
@@ -27,7 +29,7 @@ exports.index = function(req,res){
 					statistics.numPregSinCom = consulta[0].n;
 					
 					// Obtener el numero de preguntas con comentarios
-					models.sequelize.query('select count(*) n from "Quizzes" where "id" in (select distinct Q."id" from "Quizzes" Q join "Comments" C on (Q."id" = C."QuizId") where (not publicado))').then(function(consulta) {
+					models.sequelize.query('select count(*) n from "Quizzes" where "id" in (select distinct Q."id" from "Quizzes" Q join "Comments" C on (Q."id" = C."QuizId"))').then(function(consulta) {
 						statistics.numPregConCom = consulta[0].n;
 						
 						res.render('statistics/index', {statistics: statistics, errors: []});
@@ -36,6 +38,34 @@ exports.index = function(req,res){
 			});
 						
 		});
+	}else{
+		// Obtener el numero de preguntas:
+		models.sequelize.query('select count(*) n from "Quizzes"').then(function(consulta) {
+			
+			statistics.numPreg = consulta[0].n;
+
+			// Obtener el numero de comentarios PUBLICADOS:
+			models.sequelize.query('select count(*) n from "Comments" where (publicado)').then(function(consulta) {
+				statistics.numCom = consulta[0].n;
+				
+				// Obtener el numero medio de comentarios PUBLICADOS por pregunta	
+				statistics.numMedioComXPreg = statistics.numCom / statistics.numPreg;
+				
+				// Obtener el numero de preguntas sin comentarios PUBLICADOS
+				models.sequelize.query('select count(*) n from "Quizzes" where "id" not in (select distinct Q."id" from "Quizzes" Q  join "Comments" C on (Q."id" = C."QuizId") where (publicado))').then(function(consulta) {
+					statistics.numPregSinCom = consulta[0].n;
+					
+					// Obtener el numero de preguntas con comentarios PUBLICADOS
+					models.sequelize.query('select count(*) n from "Quizzes" where "id" in (select distinct Q."id" from "Quizzes" Q join "Comments" C on (Q."id" = C."QuizId") where (publicado))').then(function(consulta) {
+						statistics.numPregConCom = consulta[0].n;
+						
+						res.render('statistics/index', {statistics: statistics, errors: []});
+					});	
+				});			
+			});
+						
+		});
+	}
 };
 
 
