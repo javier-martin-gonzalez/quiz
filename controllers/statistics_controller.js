@@ -13,6 +13,7 @@ exports.index = function(req,res){
 		models.sequelize.query('select count(*) numPreg from "Quizzes"').then(function(consulta) {
 			statistics.numPreg = consulta[0].numPreg;
 			
+			/*
 			// Obtener el numero de comentarios totales:
 			models.sequelize.query('select count(*) numCom from "Comments"').then(function(consulta) {
 				statistics.numCom = consulta[0].numCom;
@@ -31,7 +32,8 @@ exports.index = function(req,res){
 						res.render('statistics/index', {statistics: statistics, errors: []});
 					});	
 				});			
-			});	
+			});
+			*/			
 		});
 };
 
@@ -48,9 +50,15 @@ exports.index = function(req, res){
 
     models.sequelize.query('SELECT count(*) AS n FROM "Quizzes"').then(function(cuenta) {//nº de preguntas
         statistics.n_preguntas=cuenta[0].n;
+		
         models.sequelize.query('SELECT count(*) AS n FROM "Comments"').then(function(cuenta) {//nº de comentarios
+		
+		
             statistics.n_comentarios=cuenta[0].n;
+			
             if(+statistics.n_preguntas>0) statistics.promedio_comentarios=cuenta[0].n/statistics.n_preguntas;//si es 0 el número de preguntas no está definido
+			
+			
             models.sequelize.query('SELECT count(*) AS n FROM "Quizzes" WHERE "id" IN (SELECT DISTINCT "QuizId" FROM "Comments")').then(function(cuenta) {//nº de preguntas con comentario
                 statistics.preg_con_com=cuenta[0].n;
                 statistics.preg_sin_com=+statistics.n_preguntas-cuenta[0].n;
