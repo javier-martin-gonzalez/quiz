@@ -27,7 +27,7 @@ exports.index = function(req,res){
 					statistics.numPregSinCom = consulta[0].n;
 					
 					// Obtener el numero de preguntas con comentarios
-					models.sequelize.query('select count(*) n from "Quizzes" where "id" in (select distinct Q."id" from "Quizzes" Q join "Comments" C on (Q."id" = C."QuizId"))').then(function(consulta) {
+					models.sequelize.query('select count(*) n from "Quizzes" where "id" in (select distinct Q."id" from "Quizzes" Q join "Comments" C on (Q."id" = C."QuizId") where (not publicado))').then(function(consulta) {
 						statistics.numPregConCom = consulta[0].n;
 						
 						res.render('statistics/index', {statistics: statistics, errors: []});
