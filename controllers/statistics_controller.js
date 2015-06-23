@@ -19,12 +19,12 @@ exports.index = function(req,res){
                 };
 		*/		
 		// Obtener el numero de preguntas:
-		models.sequelize.query('SELECT count(*) AS numPreg FROM "Quizzes"').then(function(cuenta) {
+		models.sequelize.query('SELECT count(*) AS n FROM "Quizzes"').then(function(cuenta) {
 		
 		 //models.sequelize.query('SELECT count(*) AS n FROM "Quizzes"').then(function(cuenta) {//nº de preguntas
 			//statistics.n_preguntas=cuenta[0].n;
 		
-			statistics.numPreg = cuenta[0].numPreg;
+			statistics.numPreg = cuenta[0].n;
 			res.render('statistics/index', {statistics: statistics, errors: []});
 			
 			
