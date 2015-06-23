@@ -8,23 +8,23 @@ exports.index = function(req,res){
 	// Extraer la información solicitada de la base de datos
 	// para pasársela a la vista:
 	
-	//var statistics = {numPreg: '', numCom: '', numMedioComXPreg: '', numPregSinCom: '', numPregConCom: ''}; 
+	var statistics = {numPreg: '', numCom: '', numMedioComXPreg: '', numPregSinCom: '', numPregConCom: ''}; 
 	
-	var statistics={ n_preguntas: ' -- ',
+	/*var statistics={ n_preguntas: ' -- ',
               n_comentarios: ' -- ',
                   promedio_comentarios: ' -- ',
                   preg_sin_com: ' -- ',
                   preg_con_com: ' -- ',
                  comentarios_no_pub: '--'
                 };
-				
+		*/		
 		// Obtener el numero de preguntas:
-		//models.sequelize.query('select count(*) numPreg from "Quizzes"').then(function(consulta) {
+		models.sequelize.query('select count(*) as numPreg from "Quizzes"').then(function(consulta) {
 		
-		 models.sequelize.query('SELECT count(*) AS n FROM "Quizzes"').then(function(cuenta) {//nº de preguntas
-			statistics.n_preguntas=cuenta[0].n;
+		 //models.sequelize.query('SELECT count(*) AS n FROM "Quizzes"').then(function(cuenta) {//nº de preguntas
+			//statistics.n_preguntas=cuenta[0].n;
 		
-			//statistics.numPreg = consulta[0].numPreg;
+			statistics.numPreg = consulta[0].numPreg;
 			res.render('statistics/index', {statistics: statistics, errors: []});
 			
 			
