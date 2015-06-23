@@ -12,7 +12,7 @@ exports.index = function(req,res){
 		// Obtener el numero de preguntas:
 		models.sequelize.query('select count(*) numPreg from "Quizzes"').then(function(consulta) {
 			statistics.numPreg = consulta[0].numPreg;
-			
+			res.render('statistics/index', {statistics: statistics, errors: []});
 			/*
 			// Obtener el numero de comentarios totales:
 			models.sequelize.query('select count(*) numCom from "Comments"').then(function(consulta) {
