@@ -45,7 +45,14 @@ var Comment = sequelize.import(comment_path);
 // (esta relación va a añadir la columna QuizId en a tabla Comment (foreign key)
 // ==================================================================================
 Comment.belongsTo(Quiz);	// .. indica que un Comment pertenece a un Quiz
-Quiz.hasMany(Comment);		// .. indica que una Quiz puede tener muchos Comments
+
+	// .. indica que una Quiz puede tener muchos Comments
+Quiz.hasMany(Comment,{
+	'constraints': true,
+	'onUpdate': 'cascade',
+	'onDelete': 'cascade',
+	'hooks': true
+});
 
 
 exports.Quiz = Quiz;	// exportar la definición de tabla Quiz

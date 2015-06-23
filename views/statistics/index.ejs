@@ -1,10 +1,20 @@
 ﻿	
-	<p><strong>Estadísticas:</strong></p>
-
-	<ul>
-		<li> Número de Preguntas: <%=statistics.numPreg%> </li>
-		<li> Número de Comentarios Totales: <%=statistics.numCom%> </li>
-		<li> Número Medio de comentarios por Preguntas: <%=statistics.numMedioComXPreg%> </li>
-		<li> Numero de Preguntas Sin comentarios: <%=statistics.numPregSinCom%> </li>
-		<li> Número de Preguntas Con comentarios: <%=statistics.numPregConCom%> </li>	
-	</ul>
+	<% if (session.user){ %>
+		<p><strong>Estadísticas Totales (comentarios publicados y no publicados)</strong></p>
+		<ul>
+			<li> Número de Preguntas: <%=statistics.numPreg%> </li>
+			<li> Número de Comentarios Totales: <%=statistics.numCom%> </li>
+			<li> Número Medio de comentarios por Preguntas: <%=statistics.numMedioComXPreg%> </li>
+			<li> Numero de Preguntas Sin comentarios: <%=statistics.numPregSinCom%> </li>
+			<li> Número de Preguntas Con comentarios: <%=statistics.numPregConCom%> </li>	
+		</ul>
+	<% }else{ %>
+		<p><strong>Estadísticas (solo comentarios Publicados)</strong></p>
+		<ul>
+			<li> Número de Preguntas: <%=statistics.numPreg%> </li>
+			<li> Número de Comentarios Publicados: <%=statistics.numCom%> </li>
+			<li> Número Medio de comentarios publicados por Preguntas: <%=statistics.numMedioComXPreg%> </li>
+			<li> Numero de Preguntas Sin comentarios publicados: <%=statistics.numPregSinCom%> </li>
+			<li> Número de Preguntas Con comentarios publicados: <%=statistics.numPregConCom%> </li>	
+		</ul>
+	<% } %>
